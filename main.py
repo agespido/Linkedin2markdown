@@ -22,8 +22,20 @@ def logIn(driver):
 	# If two-step verification is on, a timeout can be set here and 
 	# wait until the verification code is introduce manually.
 
-def getPersonalData():
-	pass
+def getPersonalData(driver):
+	name = driver.find_element_by_xpath('//div[@class="flex-1 mr5"]/ul[1]/li[1]').text # Name
+	description = driver.find_element_by_xpath('//h2[@class="mt1 t-18 t-black t-normal break-words"]').text # Description
+	for i in driver.find_elements_by_xpath('//a[@data-control-name="contact_see_more"]'): #Contact info
+		contactURL = i.get_attribute("href")
+	driver.get (contactURL)	
+	profileURL = driver.find_elements_by_xpath('//a[@class="pv-contact-info__contact-link link-without-visited-state t-14"]')[0].text #URL to LinkedIn Profile
+	email = driver.find_elements_by_xpath('//a[@class="pv-contact-info__contact-link link-without-visited-state t-14"]')[1].text #URL to LinkedIn Profile
+	
+	print(name)
+	print(description)
+	print(profileURL)
+	print(email)
+	return 0
 
 def getSummary():
 	pass
@@ -48,8 +60,15 @@ def main():
 
 	# Profile page
 	driver.get (PROFILE_URL)
+	try:
+		getPersonalData(driver)
+	except Exception:
+		driver.quit()
+		raise
+	#print(driver.page_source)
 	
-	#driver.quit()
+	# Close browser
+	driver.quit()
 
 if __name__ == "__main__":
 	main()
